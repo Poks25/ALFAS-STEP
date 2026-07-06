@@ -1,0 +1,300 @@
+{
+  "info": {
+    "name": "ALFAS STEP API — Complete",
+    "_postman_id": "alfas-step-api-collection-v2",
+    "description": "Koleksi endpoint API backend ALFAS STEP. Ganti nilai variable {{base_url}} sesuai environment (localhost atau Railway).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "description": "Base URL API. Ganti ke URL Railway saat production."
+    },
+    {
+      "key": "token",
+      "value": "",
+      "description": "JWT Token setelah login. Diisi otomatis dari response login."
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth — Pembeli",
+      "item": [
+        {
+          "name": "POST Register Pembeli",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) { pm.collectionVariables.set('token', res.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Budi Santoso\",\n  \"email\": \"budi@example.com\",\n  \"password\": \"budi1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Daftar akun pembeli baru. Response berisi JWT token."
+          }
+        },
+        {
+          "name": "POST Login Pembeli",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) { pm.collectionVariables.set('token', res.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"budi@example.com\",\n  \"password\": \"budi1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login pembeli. Response berisi JWT token yang disimpan ke variabel {{token}}."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth — Admin",
+      "item": [
+        {
+          "name": "POST Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) { pm.collectionVariables.set('token', res.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/admin/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "admin", "login"]
+            },
+            "description": "Login admin. Default: username=admin, password=admin123. Token disimpan ke {{token}}."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produk",
+      "item": [
+        {
+          "name": "GET Semua Produk",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"]
+            },
+            "description": "Ambil semua produk tanpa filter"
+          }
+        },
+        {
+          "name": "GET Produk Filter Kategori",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products?category=Sneakers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"],
+              "query": [
+                { "key": "category", "value": "Sneakers", "description": "Nilai: Sneakers | Formal | Boots" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Produk Filter Keyword",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products?keyword=boot",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"],
+              "query": [{ "key": "keyword", "value": "boot" }]
+            }
+          }
+        },
+        {
+          "name": "GET Produk Sort Harga Terendah",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products?sort=price_asc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"],
+              "query": [{ "key": "sort", "value": "price_asc" }]
+            }
+          }
+        },
+        {
+          "name": "GET Detail Produk by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/P1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "P1"]
+            }
+          }
+        },
+        {
+          "name": "POST Tambah Produk (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"P11\",\n  \"name\": \"Alfas Step Loafer Premium\",\n  \"category\": \"Formal\",\n  \"price\": 780000,\n  \"image_url\": \"https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&q=80&w=600\",\n  \"description\": \"Loafer premium dengan bahan kulit asli dan sol anti-slip.\",\n  \"sizes\": [39, 40, 41, 42, 43],\n  \"stock\": 8,\n  \"rating\": 4.7\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"]
+            }
+          }
+        },
+        {
+          "name": "PUT Update Produk (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 900000,\n  \"stock\": 15,\n  \"description\": \"Deskripsi yang sudah diperbarui.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/P1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "P1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Hapus Produk (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/products/P11",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "P11"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkout & Pesanan",
+      "item": [
+        {
+          "name": "POST Checkout (Buat Pesanan)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_name\": \"Budi Santoso\",\n  \"customer_phone\": \"08123456789\",\n  \"customer_address\": \"Jl. Merdeka No.10, RT 03/RW 05, Menteng, Jakarta Pusat\",\n  \"items\": [\n    {\n      \"id\": \"P1\",\n      \"name\": \"Alfas Step Pantofel Oxford Elite\",\n      \"price\": 850000,\n      \"qty\": 1,\n      \"selectedSize\": 42\n    },\n    {\n      \"id\": \"P4\",\n      \"name\": \"Alfas Step Sneakers Olahraga Pro\",\n      \"price\": 680000,\n      \"qty\": 2,\n      \"selectedSize\": 41\n    }\n  ],\n  \"total_price\": 2210000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/checkout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "checkout"]
+            },
+            "description": "Buat pesanan baru. Response berisi order_id dan wa_link."
+          }
+        },
+        {
+          "name": "GET Semua Pesanan (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders"]
+            }
+          }
+        },
+        {
+          "name": "PATCH Update Status Pesanan (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Dikirim\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orders/1/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "1", "status"]
+            },
+            "description": "Update status pesanan. Nilai valid: Diproses | Dikirim | Selesai | Dibatalkan"
+          }
+        }
+      ]
+    }
+  ]
+}

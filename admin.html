@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Admin - Alfas Step</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+    // Inisialisasi Tema (Dark Mode) di Dashboard Admin
+    const savedTheme = localStorage.getItem('darkMode');
+    if (savedTheme === 'true' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 min-h-screen font-sans transition-colors duration-300">
+
+<!-- NAVBAR -->
+<nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="text-lg font-black tracking-tighter text-slate-900 dark:text-white uppercase">ALFAS STEP</a>
+      <span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 text-xs font-bold px-2 py-0.5 rounded-full uppercase">Admin</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span id="admin-base-url" class="text-xs text-slate-400 hidden md:block font-mono"></span>
+      <a href="index.html" class="text-xs font-bold text-slate-500 hover:text-indigo-600 transition">← Ke Toko</a>
+    </div>
+  </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-6 py-8">
+
+  <!-- TAB NAVIGASI -->
+  <div class="flex gap-2 mb-8 border-b border-slate-200 dark:border-slate-800">
+    <button onclick="switchTab('products')" id="tab-products"
+      class="tab-btn px-6 py-3 text-sm font-black uppercase tracking-widest border-b-2 border-indigo-600 text-indigo-600 transition">
+      📦 Manajemen Produk
+    </button>
+    <button onclick="switchTab('orders')" id="tab-orders"
+      class="tab-btn px-6 py-3 text-sm font-black uppercase tracking-widest border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition">
+      📋 Daftar Pesanan
+    </button>
+  </div>
+
+  <!-- PANEL: MANAJEMEN PRODUK -->
+  <div id="panel-products">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-black dark:text-white">Daftar Produk</h2>
+      <button onclick="openModal()" class="px-5 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition shadow-md">
+        + Tambah Produk
+      </button>
+    </div>
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 uppercase text-xs tracking-widest">
+            <tr>
+              <th class="text-left px-6 py-4 font-bold">Produk</th>
+              <th class="text-left px-4 py-4 font-bold">Kategori</th>
+              <th class="text-right px-4 py-4 font-bold">Harga</th>
+              <th class="text-right px-4 py-4 font-bold">Stok</th>
+              <th class="text-center px-6 py-4 font-bold">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
+            <tr><td colspan="5" class="text-center py-12 text-slate-400 animate-pulse">Memuat data produk...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: DAFTAR PESANAN -->
+  <div id="panel-orders" class="hidden">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-black dark:text-white">Daftar Pesanan Masuk</h2>
+      <button onclick="loadOrders()" class="px-4 py-2 text-xs font-bold text-slate-500 border border-slate-200 dark:border-slate-700 rounded-xl hover:border-indigo-500 hover:text-indigo-500 transition">
+        ↻ Refresh
+      </button>
+    </div>
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 uppercase text-xs tracking-widest">
+            <tr>
+              <th class="text-left px-6 py-4 font-bold">#</th>
+              <th class="text-left px-4 py-4 font-bold">Pelanggan</th>
+              <th class="text-left px-4 py-4 font-bold">Telepon</th>
+              <th class="text-right px-4 py-4 font-bold">Total</th>
+              <th class="text-center px-4 py-4 font-bold">Status</th>
+              <th class="text-left px-4 py-4 font-bold">Tanggal</th>
+              <th class="text-center px-6 py-4 font-bold">WA</th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
+            <tr><td colspan="7" class="text-center py-12 text-slate-400 animate-pulse">Memuat data pesanan...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL: Form Tambah/Edit Produk -->
+<div id="product-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+  <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <div class="p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="modal-title" class="text-xl font-black dark:text-white uppercase tracking-tighter">Tambah Produk</h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 transition text-2xl font-light">×</button>
+      </div>
+      <form id="product-form" class="space-y-4">
+        <input type="hidden" id="form-product-id">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">ID Produk *</label>
+            <input id="form-id" type="text" required placeholder="Contoh: P11"
+              class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Kategori *</label>
+            <select id="form-category" required
+              class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition">
+              <option value="">-- Pilih --</option>
+              <option value="Sneakers">Sneakers</option>
+              <option value="Formal">Formal</option>
+              <option value="Boots">Boots</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Nama Produk *</label>
+          <input id="form-name" type="text" required placeholder="Nama lengkap produk"
+            class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Harga (Rp) *</label>
+            <input id="form-price" type="number" required min="0" placeholder="850000"
+              class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Stok</label>
+            <input id="form-stock" type="number" min="0" placeholder="10"
+              class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase mb-1">URL Gambar</label>
+          <input id="form-image" type="text" placeholder="https://..."
+            class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Deskripsi</label>
+          <textarea id="form-description" rows="3" placeholder="Deskripsi produk..."
+            class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition resize-none"></textarea>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="button" onclick="closeModal()"
+            class="flex-1 py-3 border-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-sm hover:border-slate-400 transition">
+            Batal
+          </button>
+          <button type="submit" id="modal-submit-btn"
+            class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition shadow-md">
+            Simpan Produk
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ADMIN_API = 'http://localhost:3000/api'; // <<< GANTI dengan URL Railway
+  let editingProductId = null;
+
+  // Update label URL di navbar
+  document.getElementById('admin-base-url').textContent = ADMIN_API;
+
+  // ============================================================
+  // TAB SWITCHING
+  // ============================================================
+  function switchTab(tab) {
+    const panels = { products: 'panel-products', orders: 'panel-orders' };
+    const tabs   = { products: 'tab-products', orders: 'tab-orders' };
+
+    Object.keys(panels).forEach(key => {
+      document.getElementById(panels[key]).classList.toggle('hidden', key !== tab);
+      const btn = document.getElementById(tabs[key]);
+      if (key === tab) {
+        btn.classList.add('border-indigo-600', 'text-indigo-600');
+        btn.classList.remove('border-transparent', 'text-slate-500');
+      } else {
+        btn.classList.remove('border-indigo-600', 'text-indigo-600');
+        btn.classList.add('border-transparent', 'text-slate-500');
+      }
+    });
+
+    if (tab === 'products') loadProducts();
+    if (tab === 'orders')   loadOrders();
+  }
+
+  // ============================================================
+  // LOAD PRODUK
+  // ============================================================
+  async function loadProducts() {
+    const tbody = document.getElementById('products-table-body');
+    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-slate-400 animate-pulse">Memuat...</td></tr>`;
+    try {
+      const res      = await fetch(`${ADMIN_API}/products`);
+      const products = await res.json();
+      if (!products.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-slate-400">Belum ada produk.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = products.map(p => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <img src="${p.image_url || ''}" alt="${p.name}" class="w-12 h-12 rounded-xl object-cover bg-slate-100"
+                onerror="this.src='https://via.placeholder.com/48?text=?'">
+              <div>
+                <p class="font-bold text-slate-800 dark:text-white text-sm leading-snug">${p.name}</p>
+                <p class="text-xs text-slate-400">${p.id}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-4 py-4">
+            <span class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-2.5 py-1 rounded-full">${p.category}</span>
+          </td>
+          <td class="px-4 py-4 text-right font-bold text-slate-700 dark:text-slate-200 text-sm">
+            Rp ${Number(p.price).toLocaleString('id-ID')}
+          </td>
+          <td class="px-4 py-4 text-right">
+            <span class="font-bold text-sm ${p.stock < 5 ? 'text-red-500' : 'text-slate-700 dark:text-slate-200'}">${p.stock}</span>
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex items-center justify-center gap-2">
+              <button onclick="openModal('${p.id}')" class="px-3 py-1.5 bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 rounded-lg text-xs font-bold hover:bg-amber-100 transition">Edit</button>
+              <button onclick="deleteProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 rounded-lg text-xs font-bold hover:bg-red-100 transition">Hapus</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-red-400 text-sm">Gagal memuat produk: ${err.message}</td></tr>`;
+    }
+  }
+
+  // ============================================================
+  // LOAD PESANAN
+  // ============================================================
+  async function loadOrders() {
+    const tbody = document.getElementById('orders-table-body');
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-slate-400 animate-pulse">Memuat...</td></tr>`;
+    try {
+      const res    = await fetch(`${ADMIN_API}/orders`);
+      const orders = await res.json();
+      if (!orders.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-slate-400">Belum ada pesanan.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = orders.map(o => {
+        const date = new Date(o.created_at).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+        return `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+            <td class="px-6 py-4 font-bold text-indigo-600 dark:text-indigo-400 text-sm">#${o.id}</td>
+            <td class="px-4 py-4">
+              <p class="font-bold text-slate-800 dark:text-white text-sm">${o.customer_name}</p>
+              <p class="text-xs text-slate-400 mt-0.5 max-w-xs truncate">${o.customer_address}</p>
+            </td>
+            <td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">${o.customer_phone}</td>
+            <td class="px-4 py-4 text-right font-black text-slate-800 dark:text-white text-sm">
+              Rp ${Number(o.total_price).toLocaleString('id-ID')}
+            </td>
+            <td class="px-4 py-4 text-center">
+              <span class="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold px-2.5 py-1 rounded-full">${o.status}</span>
+            </td>
+            <td class="px-4 py-4 text-xs text-slate-500">${date}</td>
+            <td class="px-6 py-4 text-center">
+              ${o.wa_link ? `<a href="${o.wa_link}" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg text-xs font-bold hover:bg-green-100 transition">
+                💬 Chat WA
+              </a>` : '<span class="text-slate-300 text-xs">—</span>'}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-red-400 text-sm">Gagal memuat pesanan: ${err.message}</td></tr>`;
+    }
+  }
+
+  // ============================================================
+  // MODAL PRODUK — Buka (mode tambah atau edit)
+  // ============================================================
+  async function openModal(productId = null) {
+    editingProductId = productId;
+    const modal = document.getElementById('product-modal');
+    const title = document.getElementById('modal-title');
+    const form  = document.getElementById('product-form');
+    form.reset();
+
+    if (productId) {
+      title.textContent = 'Edit Produk';
+      document.getElementById('form-id').disabled = true;
+      try {
+        const res = await fetch(`${ADMIN_API}/products/${productId}`);
+        const p   = await res.json();
+        document.getElementById('form-product-id').value = p.id;
+        document.getElementById('form-id').value          = p.id;
+        document.getElementById('form-name').value        = p.name;
+        document.getElementById('form-category').value   = p.category;
+        document.getElementById('form-price').value      = p.price;
+        document.getElementById('form-stock').value      = p.stock;
+        document.getElementById('form-image').value      = p.image_url || '';
+        document.getElementById('form-description').value = p.description || '';
+      } catch (err) { alert('Gagal memuat data produk: ' + err.message); return; }
+    } else {
+      title.textContent = 'Tambah Produk';
+      document.getElementById('form-id').disabled = false;
+    }
+    modal.classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('product-modal').classList.add('hidden');
+    editingProductId = null;
+  }
+
+  // ============================================================
+  // SUBMIT FORM PRODUK (Tambah atau Edit)
+  // ============================================================
+  document.getElementById('product-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('modal-submit-btn');
+    btn.disabled = true; btn.textContent = 'Menyimpan...';
+
+    const payload = {
+      id:          document.getElementById('form-id').value.trim(),
+      name:        document.getElementById('form-name').value.trim(),
+      category:    document.getElementById('form-category').value,
+      price:       parseInt(document.getElementById('form-price').value),
+      stock:       parseInt(document.getElementById('form-stock').value) || 0,
+      image_url:   document.getElementById('form-image').value.trim(),
+      description: document.getElementById('form-description').value.trim(),
+      sizes:       [39, 40, 41, 42, 43]
+    };
+
+    try {
+      const isEdit = !!editingProductId;
+      const url    = isEdit ? `${ADMIN_API}/products/${editingProductId}` : `${ADMIN_API}/products`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const res    = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const data   = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Gagal menyimpan');
+      closeModal();
+      loadProducts();
+    } catch (err) {
+      alert('Error: ' + err.message);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Simpan Produk';
+    }
+  });
+
+  // ============================================================
+  // DELETE PRODUK
+  // ============================================================
+  async function deleteProduct(id, name) {
+    if (!confirm(`Hapus produk "${name}" (ID: ${id})?\n\nTindakan ini tidak dapat dibatalkan.`)) return;
+    try {
+      const res  = await fetch(`${ADMIN_API}/products/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      loadProducts();
+    } catch (err) { alert('Gagal menghapus: ' + err.message); }
+  }
+
+  // ============================================================
+  // INIT
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', () => {
+    loadProducts();
+  });
+</script>
+</body>
+</html>

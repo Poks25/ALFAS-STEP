@@ -1,0 +1,102 @@
+[
+  {
+    "id": "P1",
+    "name": "Alfas Step Pantofel Oxford Elite",
+    "category": "Formal",
+    "price": 850000,
+    "image": "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&q=80&w=600",
+    "description": "Sepatu kulit asli dengan desain klasik Oxford, sangat ideal untuk acara kenegaraan atau kantor.",
+    "stock": 10,
+    "rating": 4.9
+  },
+  {
+    "id": "P2",
+    "name": "Alfas Step Sneakers Putih Urban",
+    "category": "Sneakers",
+    "price": 525000,
+    "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=600",
+    "description": "Sepatu kets minimalis berwarna putih yang ringan dan nyaman untuk aktivitas harian.",
+    "stock": 15,
+    "rating": 4.8
+  },
+  {
+    "id": "P3",
+    "name": "Alfas Step Sepatu Boot Suede Cokelat",
+    "category": "Boots",
+    "price": 720000,
+    "image": "https://i.pinimg.com/736x/af/ce/49/afce4960f28b0753c1bde6a2fa4bf99c.jpg",
+    "description": "Sepatu bot berbahan kulit suede berkualitas tinggi dengan warna cokelat maskulin.",
+    "stock": 5,
+    "rating": 4.7
+  },
+  {
+    "id": "P4",
+    "name": "Alfas Step Sneakers Olahraga Pro",
+    "category": "Sneakers",
+    "price": 680000,
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=600",
+    "description": "Sepatu olahraga dengan teknologi bantalan empuk untuk performa maksimal.",
+    "stock": 12,
+    "rating": 4.9
+  },
+  {
+    "id": "P5",
+    "name": "Alfas Step Pantofel Hitam Premium",
+    "category": "Formal",
+    "price": 950000,
+    "image": "https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&q=80&w=600",
+    "description": "Sepatu pantofel kulit premium berwarna hitam pekat untuk kesan sangat elegan.",
+    "stock": 8,
+    "rating": 5.0
+  },
+  {
+    "id": "P6",
+    "name": "Alfas Step Sneakers Casual Abu-abu",
+    "category": "Sneakers",
+    "price": 450000,
+    "image": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&q=80&w=600",
+    "description": "Sepatu casual fleksibel dengan warna abu-abu yang modern dan mudah dipadupadankan.",
+    "stock": 20,
+    "rating": 4.5
+  },
+  {
+    "id": "P7",
+    "name": "Alfas Step Pantofel Derby Klasik",
+    "category": "Formal",
+    "price": 800000,
+    "image": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=600",
+    "description": "Desain Derby klasik yang kokoh dan formal bagi pria profesional.",
+    "stock": 7,
+    "rating": 4.8
+  },
+  {
+    "id": "P8",
+    "name": "Alfas Step Sepatu Boot Pendaki",
+    "category": "Boots",
+    "price": 1100000,
+    "image": "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?auto=format&fit=crop&q=80&w=600",
+    "description": "Sepatu bot tangguh yang dirancang khusus untuk petualangan luar ruangan.",
+    "stock": 4,
+    "rating": 4.9
+  },
+  {
+    "id": "P9",
+    "name": "Alfas Step Sneakers Retro Modern",
+    "category": "Sneakers",
+    "price": 590000,
+    "image": "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=600",
+    "description": "Sepatu kets gaya retro dengan sentuhan warna neon yang sangat trendi.",
+    "stock": 14,
+    "rating": 4.6
+  },
+  {
+    "id": "P10",
+    "name": "Alfas Step Sepatu Boot Workman Steel",
+    "category": "Boots",
+    "price": 890000,
+    "image": "https://i.pinimg.com/1200x/be/d1/77/bed1779ca5c60b249ffafb7bdb027da6.jpg",
+    "description": "Sepatu bot industri dengan perlindungan ekstra untuk keamanan kerja.",
+    "stock": 6,
+    "rating": 4.7
+  }
+]
