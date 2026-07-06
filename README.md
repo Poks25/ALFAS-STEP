@@ -16,7 +16,7 @@ Project ini dirancang untuk memberikan pengalaman belanja yang **cepat, ringan, 
 Aplikasi dapat dijalankan langsung melalui browser tanpa instalasi tambahan.
 
 👉 **Live Demo**  
- https://poks25.github.io/Dani_Alfa_UTS_WEB_02/
+https://poks25.github.io/ALFAS-STEP/
 
 📌 **Catatan:**  
 Jika belum di-deploy, cukup buka file `index.html` di browser.
