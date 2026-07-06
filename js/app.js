@@ -4,7 +4,7 @@
 
 // Deklarasi aman: hanya set jika belum dideklarasikan oleh file lain (misal ui.js)
 if (typeof API_BASE === 'undefined') {
-  window.API_BASE = 'https://danialfautsweb02-production.up.railway.app';
+  window.API_BASE = 'https://alfas-step-production.up.railway.app';
 }
 
 let allProducts    = [];
